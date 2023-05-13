@@ -16,6 +16,8 @@ defmodule BookshelvesWeb.IndexLive do
   end
 
   def mount(_params, _session, socket) do
+    Phoenix.PubSub.subscribe(Bookshelves.PubSub, "bookshelves")
+
     {:ok,
      socket
      |> assign(

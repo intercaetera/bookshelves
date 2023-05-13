@@ -53,9 +53,10 @@ defmodule BookshelvesWeb.LiveComponents.AddShelf do
   end
 
   def handle_event("save", %{"shelf" => params}, socket) do
+    IO.inspect(params)
     case Bookshelves.create_shelf(params) do
       {:ok, shelf} ->
-        send(self(), {:new_shelf, shelf.id})
+        Phoenix.PubSub.broadcast(Bookshelves.PubSub, "bookshelves", {:new_shelf, shelf.id})
 
         changeset = Bookshelves.change_shelf(%Shelf{})
 
