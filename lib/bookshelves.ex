@@ -10,7 +10,7 @@ defmodule Bookshelves do
   if it comes from the database, an external API or others.
   """
 
-  def get_all_shelf_ids(), do: Repo.all from s in Shelf, select: s.id
+  def get_all_shelf_ids(), do: Repo.all from s in Shelf, select: s.id, order_by: [desc: s.id]
 
   def get_shelves(ids) do
     from(s in Shelf, where: s.id in ^ids, preload: :books, select: {s.id, s})
@@ -23,5 +23,15 @@ defmodule Bookshelves do
 
     from(s in Shelf, where: s.id == ^id, preload: [books: ^books])
     |> Repo.one()
+  end
+
+  def create_shelf(attrs \\ %{}) do
+    %Shelf{}
+    |> Shelf.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def change_shelf(%Shelf{} = shelf, attrs \\ %{}) do
+    Shelf.changeset(shelf, attrs)
   end
 end
